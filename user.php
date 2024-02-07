@@ -1,11 +1,27 @@
+<?php
+    include 'includes/conn.php';
 
+    $username = $_SESSION['username'];
+
+    if(isset($username)){
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows == 1) {
+            $row = $result->fetch_assoc();
+        }
+    
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Welcome User</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -91,11 +107,11 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="#">Your Logo</a>
+    <a class="navbar-brand" href="#">Logo</a>
     <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="#">Message</a>
+                <a class="nav-link" href="inbox.php">Message</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Notification</a>
@@ -114,12 +130,12 @@
         <div class="profile-details">
             <img src="https://via.placeholder.com/40" alt="Profile" class="profile-image">
             <div class="profile-info">
-                <div class="font-weight-bold">John Doe</div>
-                <div>@john_doe</div>
+                <div class="font-weight-bold"><?php echo $row['fullname']; ?></div>
+                <div>@<?php echo $row['username']; ?></div>
             </div>
         </div>
         <div>
-            <button class="btn btn-primary">Logout</button>
+            <a href="logout.php"><button class="btn btn-primary">Logout</button></a>
         </div>
     </div>
 
@@ -130,7 +146,7 @@
             
             <div class="details-row">
                 <div class="details-label">Location:</div>
-                <div class="details-value">City, Country</div>
+                <div class="details-value"><?php echo $row['location']; ?></div>
             </div>
 
             <div class="details-row">
@@ -140,7 +156,7 @@
 
             <div class="details-row">
                 <div class="details-label">Email:</div>
-                <div class="details-value">john.doe@example.com</div>
+                <div class="details-value"><?php echo $row['email']; ?></div>
             </div>
 
             <div class="details-row">
@@ -166,3 +182,4 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min
 </body>
 </html>
+<?php } else header("location: index.html"); ?>
