@@ -102,6 +102,32 @@
             margin-left: 8px;
             color: #6c757d;
         }
+
+           /* Style for the modal overlay */
+           .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000; /* Ensure the overlay is on top of all other elements */
+        }
+        
+        /* Style for the modal content */
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 1001; 
+            width: 800px; 
+            max-width: 90%;
+        }
     </style>
 </head>
 <body>
@@ -124,6 +150,19 @@
         </ul>
     </div>
 </nav>
+
+<?php
+    if(isset($_GET['uju'])){
+        echo '
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>successfully! </strong>'.$_GET["uju"].'.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+        ';
+    }
+?>
 
 <div class="container mt-4">
     <div class="profile-container">
@@ -173,13 +212,78 @@
         <div class="create-job">
             <img src="https://via.placeholder.com/50" alt="Create Job Icon" class="img-fluid mb-3">
             <p class="mb-3">Ready to earn on your own terms?</p>
-            <button class="btn btn-success">Create Job</button>
+            <button class="btn btn-success" type="button"  onclick="showModal()">Create Job</button>
         </div>
     </div>
 </div>
 
+
+<!-- Modal overlay -->
+<div class="modal-overlay" id="modalOverlay">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <h2>Create Job</h2>
+        <form action="creatjob.php" method="POST">
+            <div class="form-group">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" class="form-control" id="jobTitle" name="jobTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="shortDescription">Short Description (Minimum 50 characters)</label>
+                <textarea class="form-control" id="shortDescription" name="shortDescription" rows="3" minlength="50" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="longDescription">Long Description</label>
+                <textarea class="form-control" id="longDescription" name="longDescription" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" name="price" required>
+            </div>
+            <div class="form-group">
+                <label for="startTime">Start Time</label>
+                <input type="datetime-local" class="form-control" id="startTime" name="startTime" required>
+            </div>
+            <div class="form-group">
+                <label for="workType">Type of Work</label>
+                <select class="form-control" id="workType" name="workType">
+                    <?php
+                        require_once('selectCartegories.php');
+                        if ($resultCat->num_rows > 0):
+                            // Output data of each row
+                            while($row = $resultCat->fetch_assoc()):                            
+                    ?>
+                    <option value="<?php echo $row["categoryid"]; ?>"><?php echo $row["categoryname"]; ?></option>
+                   <?php
+                            endwhile;
+                        endif;
+                   ?>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-secondary" onclick="hideModal()">Close</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<script>
+function showModal() {
+    var modalOverlay = document.getElementById("modalOverlay");
+    modalOverlay.style.display = "block";
+}
+
+function hideModal() {
+    var modalOverlay = document.getElementById("modalOverlay");
+    modalOverlay.style.display = "none";
+}
+</script>
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min"></script>
+<script>
+    
+</script>
 </body>
 </html>
 <?php } else header("location: index.html"); ?>

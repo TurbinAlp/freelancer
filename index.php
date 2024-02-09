@@ -1,9 +1,18 @@
+<?php
+    include_once 'includes/conn.php';
+    
+    $sqlCat5 = "SELECT * FROM categories WHERE numberOfJobs >= 5 LIMIT 4";
+
+    $resultCat5 = $conn->query($sqlCat5);
+                         
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Your Webpage</title>
+    <title>Wlcome to FreeLancer: Your Mind Get You Worth IT!!</title>
     <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
     <style>
         body {
@@ -71,42 +80,21 @@
 <div class="fluid-container section px-5">
     <h2>POPULAR SERVICES</h2>
     <div class="row">
+        <?php
+            if ($resultCat5->num_rows > 0):
+                while($row = $resultCat5->fetch_assoc()):   
+        ?>
         <div class="col-md-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <img src="imgs/1.jpeg" class="img-fluid card-img-top" alt="AI Artist Image">
-                    <h5 class="card-title">AI Artist</h5>
-                    <!-- Add more details if needed -->
+            <a href="jobs.php?categoryid=<?php echo $row['categoryid']; ?>">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="<?php echo $row['imageRUL']; ?>" class="img-fluid card-img-top" alt="<?php echo $row['categoryname']; ?>">
+                        <h5 class="card-title"><?php echo $row['categoryname']; ?></h5>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <img src="imgs/wordpress.png" class="img-fluid card-img-top" alt="AI Artist Image">
-                    <h5 class="card-title">WordPress</h5>
-                    <!-- Add more details if needed -->
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <img src="imgs/vexplainer.jpg" class="img-fluid card-img-top" alt="AI Artist Image">
-                    <h5 class="card-title">Video Explainer</h5>
-                    <!-- Add more details if needed -->
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <img src="imgs/vover.webp" class="img-fluid card-img-top" alt="AI Artist Image">
-                    <h5 class="card-title">Voice Over</h5>
-                    <!-- Add more details if needed -->
-                </div>
-            </div>
-        </div>
+        <?php endwhile; endif;?>
     </div>
 </div>
 

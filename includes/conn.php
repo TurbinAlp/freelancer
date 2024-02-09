@@ -2,11 +2,11 @@
 session_start();
 
 $servername = "localhost"; 
-$username = "root"; 
-$password = ""; 
+$usernamedb = "root"; 
+$passworddb = ""; 
 $database = "freelancer";
 
-$conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($servername, $usernamedb, $passworddb, $database);
 
 // Check connection
 if ($conn->connect_error) {
