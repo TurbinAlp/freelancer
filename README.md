@@ -14,5 +14,14 @@ This is a simple freelancer website that connects freelancers with clients who n
 - Clients can post projects and hire freelancers.
 - Communication between clients and freelancers is facilitated through the platform.
 
-# Feel free to explore and contribute to this project!
+### Feel free to explore and contribute to this project!
+
+# Instruction
+- clone/download source code
+- make sure you have xamp/wamp installed in your computer
+- open your local host server (wamp/xamp) turn on Apache server and Mysql
+- Go to phpmyadmin and create database name called freelancer
+- then import the database with in the database folder obtained from this preoject after download/clone
+- the rest make the changes you see some issues
+- Mimi sielewi kwanza inanichanganya malizieni pia
 
