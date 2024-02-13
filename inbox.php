@@ -1,16 +1,50 @@
 <?php
     include_once 'includes/conn.php';
     $username = $_SESSION['username'];
+    $usernameGet = $_GET['userNameFromGet'];
+    $rowSender;
+    $rowReceiver;
 
     if(isset($username)){
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        // Select receiver
+        $sqlReceiver = "SELECT * FROM users WHERE username = '$usernameGet'";
+        $resultReceiver = $conn->query($sqlReceiver);
 
-        if ($result->num_rows == 1) {
-            $row = $result->fetch_assoc();
+
+        // Select sender
+        $sqlSender = "SELECT * FROM users WHERE username = '$username'";
+        $resultSender = $conn->query($sqlSender);
+
+        if ($resultReceiver->num_rows == 1 || $resultSender->num_rows == 1) {
+            $rowSender = $resultSender->fetch_assoc();
+            $rowReceiver = $resultReceiver->fetch_assoc();
         }
+
+        echo $rowReceiver['userid'].' '. $rowSender['userid'];
+
+        $senderid = $rowSender['userid'];
+        $receiverid = $rowReceiver['userid'];
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST'):
+            $message = $_POST['meseageToSent'];
+
+            // SQL statement
+            $sql = "INSERT INTO messages ( senderid, receiverid, message, message_stutus)
+                    VALUES ('$senderid', '$receiverid', '$message', 'unseen')";
+
+            if ($conn->query($sql) === TRUE) {
+            echo "New record created successfully";
+            } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+            }
+        endif;
+
+
+        // Select messages for receiver
+        $sqlMessages = "SELECT * FROM messages";
+        $resultMessages = $conn->query($sqlMessages);
+
+        print_r($resultMessages);
         
 ?>
 <!DOCTYPE html>
@@ -85,8 +119,8 @@
                             </div>
                             <!-- Full name, username, and date -->
                             <div class="col-md-6 p-3">
-                                <h5 class="card-title">Person 1</h5>
-                                <p class="card-text">@username1</p>
+                                <h5 class="card-title"><?php echo $rowReceiver['fullname'];?></h5>
+                                <p class="card-text">@<?php echo $rowReceiver['username'];?></p>
                             </div>
                             <div class="col-sm-3 ml-auto text-right  mt-3">
                                 <p class="card-text">jan 1, 2024</p>
@@ -102,14 +136,17 @@
                 <div class="chat-box">
                     <div class="card border-0">
                         <div class="card-body">
-                            <div class="message sent">Your message 1</div>
-                            <div class="message received">Their message 1</div>
-                            <div class="message sent">Your message 2</div>
-                            <div class="message received">Their message 2</div>
+                            <?php
+                                if ($resultMessages->num_rows > 0):
+                                    while($rowMessage = $resultMessages->fetch_assoc()):
+                            ?>
+                            <div class="message sent"><?php if($rowSender['userid'] == $rowMessage['senderid'] ) echo $rowMessage['message']; ?></div>
+                            <div class="message received"><?php if($rowReceiver['userid'] == $rowMessage['receiverid'] ) echo $rowMessage['message']; ?></div>
+                            <?php endwhile; else: echo 'No New Message'; endif; ?>
                         </div>
-                        <form class="col border rounded-2 mt-3">
+                        <form action="<?php echo $_SERVER['PHP_SELF'].'?userNameFromGet='.$usernameGet; ?>" method="POST" class="col border rounded-2 mt-3">
                             <div class="row d-flex h-100">
-                                <div class="col-9"><input  type="text" class="form-control" placeholder="Type your message"></div>
+                                <div class="col-9"><input  type="text" class="form-control" name="meseageToSent" placeholder="Type your message"></div>
                                 <div class="col-1 align-self-end ml-auto"><button class="btn btn-primary">Send</button></div>
                             </div>
                         </form>
@@ -120,4 +157,4 @@
     </div>
 </body>
 </html>
-<?php } else header("location: index.html");?>
+<?php } else header("location: login.php");?>

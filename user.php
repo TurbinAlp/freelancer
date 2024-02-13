@@ -133,7 +133,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="#">Logo</a>
+    <a class="navbar-brand" href="index.php">Logo</a>
     <div class="collapse navbar-collapse justify-content-end">
         <ul class="navbar-nav">
             <li class="nav-item">

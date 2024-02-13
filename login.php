@@ -116,6 +116,7 @@ $conn->close();
             <input type="password" class="form-control" id="password" name="password" required>
           </div>
           <button type="submit" class="btn btn-primary btn-block">Login</button>
+          <p>You do not have an account? <a href="signup.php">Click here to register</a></p>
         </form>
       </div>
     </div>

@@ -15,7 +15,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password before storing
 
   if ($stmt->execute()) {
-      echo "New record created successfully";
+      echo "New record created successfully <a href='login.php'>Sign In</a>";
   } else {
       echo "Error: " . $stmt->error;
   }
@@ -70,10 +70,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="#">Explore</a>
+                <a class="nav-link" href="index.php">Explore</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Sign In</a>
+                <a class="nav-link" href="lofin.php">Sign In</a>
             </li>
         </ul>
     </div>

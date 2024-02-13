@@ -4,10 +4,13 @@
 
     if(isset($_SESSION['username'])) $username = $_SESSION['username']; 
     $categoryIDFromGetMethod = isset($_GET['categoryid']) ? $_GET['categoryid'] : null;
-    
+    if(isset($categoryIDFromGetMethod)):
     $sql = "SELECT * FROM jobs WHERE category = $categoryIDFromGetMethod";
 
     $result = $conn->query($sql);
+    else:
+        header("location: index.php");
+    endif;
         
        // $conn->close();
 ?>
@@ -104,7 +107,17 @@
                     <td><?php echo $row["start_time"]; ?></td>
                     <td>Tshs <?php echo $row["price"]; ?></td>
                 </tr>
-                <?php endwhile; endif;?>    
+                <?php endwhile;
+                    else: echo '
+                    <div class="row justify-content-center">
+                    <div class="col-md-8">
+                      <div class="message-box alert alert-info">
+                        <p class="fs-5">There is no projects/Task currently. Try again later.<a class="nav-link" href="index.php">Back Home</a></p>
+                      </div>
+                    </div>
+                  </div>
+                    ';
+                     endif;?>    
             </tbody>
         </table>
     </div>
